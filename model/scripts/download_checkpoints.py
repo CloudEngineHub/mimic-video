@@ -55,7 +55,7 @@ def get_checkpoints(policy_name: str) -> tuple[str, ...]:
 
     return (
         f"action_decoder/w2a_{policy_name}*",
-        f"video_backbone/v2w_{policy_name.split('_')[:2]}*",
+        f"video_backbone/v2w_{'_'.join(policy_name.split('_')[:2])}*",
         f"dataset_statistics/{policy_name}.json",
     )
 
