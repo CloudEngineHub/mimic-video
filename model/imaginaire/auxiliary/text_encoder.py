@@ -117,8 +117,8 @@ class CosmosT5TextEncoder(nn.Module):
             return_offsets_mapping=False,
         )
 
-        input_ids = batch_encoding.input_ids.to(self.device)
-        attn_mask = batch_encoding.attention_mask.to(self.device)
+        input_ids = batch_encoding.input_ids.to(self.text_encoder.device)
+        attn_mask = batch_encoding.attention_mask.to(self.text_encoder.device)
 
         outputs = self.text_encoder(input_ids=input_ids, attention_mask=attn_mask)
 
