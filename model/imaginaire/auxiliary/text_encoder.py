@@ -62,7 +62,6 @@ class CosmosT5TextEncoder(nn.Module):
         """
         super().__init__()
         self.config = config
-        self.device = device
         self.tokenizer = T5TokenizerFast.from_pretrained(self.config.ckpt_path, torch_dtype=torch_dtype)
         self.text_encoder = T5EncoderModel.from_pretrained(self.config.ckpt_path, torch_dtype=torch_dtype).to(device)
         self.text_encoder.eval()
@@ -72,6 +71,10 @@ class CosmosT5TextEncoder(nn.Module):
     @property
     def model(self):
         return self
+
+    @property
+    def device(self):
+        return self.text_encoder.device
 
     @torch.inference_mode()
     def encode_prompts(self, prompts: str | list[str], max_length: int | None = None, return_mask: bool = False):
@@ -117,8 +120,8 @@ class CosmosT5TextEncoder(nn.Module):
             return_offsets_mapping=False,
         )
 
-        input_ids = batch_encoding.input_ids.to(self.text_encoder.device)
-        attn_mask = batch_encoding.attention_mask.to(self.text_encoder.device)
+        input_ids = batch_encoding.input_ids.to(self.device)
+        attn_mask = batch_encoding.attention_mask.to(self.device)
 
         outputs = self.text_encoder(input_ids=input_ids, attention_mask=attn_mask)
 
